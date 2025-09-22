@@ -1,23 +1,4 @@
 {
-  "batches": [
-    {
-      "id": "8abde28e-04b5-49da-8d29-b56115ddfed8",
-      "timestamp": "2025-09-22T05:39:37.366Z",
-      "subject": "Test Email",
-      "attachmentNames": [
-        "python.gram"
-      ],
-      "total": 1,
-      "sent": 1,
-      "failed": 0
-    }
-  ],
-  "results": [
-    {
-      "id": "fc9205c5-5a35-4c21-969a-2d9dc8d156a6",
-      "batchId": "8abde28e-04b5-49da-8d29-b56115ddfed8",
-      "email": "ishaanar@bu.edu",
-      "status": "SENT"
-    }
-  ]
+  "batches": [],
+  "results": []
 }
