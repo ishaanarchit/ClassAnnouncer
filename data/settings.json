@@ -1,0 +1,7 @@
+{
+  "fromName": "Professor",
+  "fromEmail": "prof@example.com",
+  "provider": "none",
+  "testMode": true,
+  "maxTotalAttachmentMB": 20
+}
