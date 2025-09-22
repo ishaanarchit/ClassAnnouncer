@@ -11,16 +11,18 @@ const UpdateStudentSchema = z.object({
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const studentId = params.id;
+    const { id } = await params;
+    const studentId = id;
     const body = await request.json();
     const validation = UpdateStudentSchema.safeParse(body);
 
     if (!validation.success) {
+      const firstError = validation.error.issues?.[0];
       return NextResponse.json(
-        { error: validation.error.errors[0].message },
+        { error: firstError?.message || "Validation failed" },
         { status: 400 }
       );
     }
@@ -76,10 +78,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const studentId = params.id;
+    const { id } = await params;
+    const studentId = id;
     const students = await readStudents();
     const filteredStudents = students.filter(s => s.id !== studentId);
 

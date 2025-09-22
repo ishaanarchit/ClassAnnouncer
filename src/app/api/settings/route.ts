@@ -40,8 +40,9 @@ export async function POST(request: NextRequest) {
     const validation = SettingsSchema.safeParse(body);
 
     if (!validation.success) {
+      const firstError = validation.error.issues?.[0];
       return NextResponse.json(
-        { error: validation.error.errors[0].message },
+        { error: firstError?.message || "Validation failed" },
         { status: 400 }
       );
     }

@@ -28,17 +28,18 @@ function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function isTransientError(error: any): boolean {
+function isTransientError(error: unknown): boolean {
   if (!error) return false;
 
   // HTTP status codes that indicate transient errors
-  const status = error.code || error.statusCode || error.status;
-  if (status === 429 || (status >= 500 && status < 600)) {
+  const errorObj = error as Record<string, unknown>;
+  const status = errorObj.code || errorObj.statusCode || errorObj.status;
+  if (typeof status === 'number' && (status === 429 || (status >= 500 && status < 600))) {
     return true;
   }
 
   // SendGrid specific error codes
-  if (error.code === "ECONNRESET" || error.code === "ETIMEDOUT") {
+  if (errorObj.code === "ECONNRESET" || errorObj.code === "ETIMEDOUT") {
     return true;
   }
 
@@ -68,7 +69,8 @@ async function sendOneMessage(message: SendOne, retryCount = 0): Promise<SendMan
       error: `Unsupported provider: ${settings.provider}`
     };
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     // Check if we should retry
     if (retryCount < MAX_RETRIES && isTransientError(error)) {
       await delay(RETRY_DELAYS[retryCount]);
@@ -78,12 +80,12 @@ async function sendOneMessage(message: SendOne, retryCount = 0): Promise<SendMan
     return {
       email: message.to,
       ok: false,
-      error: error.message || "Unknown error occurred"
+      error: errorMessage
     };
   }
 }
 
-async function sendViaSendGrid(message: SendOne, settings: any): Promise<SendManyResult> {
+async function sendViaSendGrid(message: SendOne, settings: { fromEmail: string; fromName: string }): Promise<SendManyResult> {
   const apiKey = process.env.SENDGRID_API_KEY;
   if (!apiKey) {
     return {
@@ -115,7 +117,7 @@ async function sendViaSendGrid(message: SendOne, settings: any): Promise<SendMan
   return { email: message.to, ok: true };
 }
 
-async function sendViaSmtp(message: SendOne, settings: any): Promise<SendManyResult> {
+async function sendViaSmtp(message: SendOne, settings: { fromEmail: string; fromName: string }): Promise<SendManyResult> {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
 
   if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
@@ -126,7 +128,7 @@ async function sendViaSmtp(message: SendOne, settings: any): Promise<SendManyRes
     };
   }
 
-  const transporter = nodemailer.createTransporter({
+  const transporter = nodemailer.createTransport({
     host: SMTP_HOST,
     port: parseInt(SMTP_PORT),
     secure: parseInt(SMTP_PORT) === 465, // true for 465, false for other ports

@@ -171,26 +171,28 @@ export async function POST(request: NextRequest) {
       }
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
     console.error("API error details:", {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
+      message: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
     });
 
     // Handle validation errors with 400 status
-    if (error.message === "No recipients" ||
-        error.message.includes("Missing required fields") ||
-        error.message.includes("Invalid")) {
+    if (errorMessage === "No recipients" ||
+        errorMessage.includes("Missing required fields") ||
+        errorMessage.includes("Invalid")) {
       return NextResponse.json(
-        { ok: false, error: error.message },
+        { ok: false, error: errorMessage },
         { status: 400 }
       );
     }
 
     // Handle other errors with 500 status
     return NextResponse.json(
-      { ok: false, error: "Failed to send emails", details: error.message },
+      { ok: false, error: "Failed to send emails", details: errorMessage },
       { status: 500 }
     );
   }

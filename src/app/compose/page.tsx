@@ -99,7 +99,7 @@ export default function ComposePage() {
       // Sanitize HTML on client side
       const sanitizedHtml = DOMPurify.sanitize(bodyHtml, {
         ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "p", "br", "a", "ul", "ol", "li", "small"],
-        ALLOWED_ATTR: { a: ["href"] },
+        ALLOWED_ATTR: ["href"],
         ALLOW_DATA_ATTR: false,
         ALLOW_UNKNOWN_PROTOCOLS: false,
       });
@@ -266,7 +266,7 @@ export default function ComposePage() {
                   className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 />
                 <p className="text-xs text-muted-foreground">
-                  HTML tags allowed: &lt;b&gt;, &lt;strong&gt;, &lt;i&gt;, &lt;em&gt;, &lt;u&gt;, &lt;p&gt;, &lt;br&gt;, &lt;a href=""&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;small&gt;
+                  HTML tags allowed: &lt;b&gt;, &lt;strong&gt;, &lt;i&gt;, &lt;em&gt;, &lt;u&gt;, &lt;p&gt;, &lt;br&gt;, &lt;a href=&quot;&quot;&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;small&gt;
                 </p>
               </div>
 

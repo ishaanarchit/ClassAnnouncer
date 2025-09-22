@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     const validation = BulkUpsertSchema.safeParse(body);
 
     if (!validation.success) {
-      const firstError = validation.error.errors?.[0];
+      const firstError = validation.error.issues?.[0];
       return NextResponse.json(
         { error: firstError?.message || "Validation failed" },
         { status: 400 }
