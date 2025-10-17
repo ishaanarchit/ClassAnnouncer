@@ -289,27 +289,7 @@ export default function SettingsPage() {
 
       {/* Environment Variables Help */}
       <Card>
-        <CardHeader>
-          <CardTitle>Environment Variables</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="text-sm space-y-2">
-            <p className="font-medium">SendGrid Configuration:</p>
-            <code className="block bg-muted p-2 rounded text-xs">
-              SENDGRID_API_KEY=your_sendgrid_api_key
-            </code>
-          </div>
-
-          <div className="text-sm space-y-2">
-            <p className="font-medium">SMTP Configuration:</p>
-            <code className="block bg-muted p-2 rounded text-xs">
-              SMTP_HOST=smtp.gmail.com<br />
-              SMTP_PORT=587<br />
-              SMTP_USER=your_email@gmail.com<br />
-              SMTP_PASS=your_app_password
-            </code>
-          </div>
-
+        
           <p className="text-xs text-muted-foreground">
             Add these to your .env.local file to configure email providers.
           </p>
